@@ -437,7 +437,7 @@ $(document).ready(function () {
     }
 
     $("#newfile").click(function (event) {
-    	//ToDo clear textfield
+    	//ToDo rename newfile to understood or similar
     	switchWindowMode("use");
     	event.preventDefault();
     });
@@ -495,6 +495,11 @@ $(document).ready(function () {
             switchWindowMode("help");
             todotxttdi.helpon = true;
         }
+        event.preventDefault();
+    });
+    
+    $("#clearicon").click(function (event) {
+    	$("#t1").val('');
         event.preventDefault();
     });
 
