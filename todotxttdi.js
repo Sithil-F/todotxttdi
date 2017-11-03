@@ -367,6 +367,9 @@ $(document).ready(function () {
             $("#todotxt").hide();
             $("#helptxt").hide();
             $("#helplink").hide();
+            $("#clearicon").hide();
+            $("#saveicon").hide();
+            $("#loadicon").hide();
             $("#saving_status_msg").text("");//ToDo evaluate if #saving_status_msg is still usefull
             $("#saving_status_msg").show();
             $("#logout").hide();
@@ -378,6 +381,9 @@ $(document).ready(function () {
             $("#helplink").attr("src", "cute_ball_stop_help.png");
             $("#helplink").attr("title", "Return to Todo.txt");
             $("#helplink").show();
+            $("#clearicon").show();
+            $("#saveicon").show();
+            $("#loadicon").show();
             $("#saving_status_msg").hide();
             $("#logout").hide();
             $("#footer").hide();
@@ -388,6 +394,9 @@ $(document).ready(function () {
             $("#helplink").attr("src", "cute_ball_help.png");
             $("#helplink").attr("title", "Show Help");
             $("#helplink").show();
+            $("#clearicon").show();
+            $("#saveicon").show();
+            $("#loadicon").show();
             $("#saving_status_msg").text("");
             $("#saving_status_msg").show();
             $("#logout").show();
@@ -426,6 +435,12 @@ $(document).ready(function () {
     } else {
         switchWindowMode("welcome"); 
     }
+
+    $("#newfile").click(function (event) {
+    	//ToDo clear textfield
+    	switchWindowMode("use");
+    	event.preventDefault();
+    });
 
     $("#t1").keydown(function (e) {
         if ($.inArray(e.which, todotxttdi.nondirtykeys) !== -1) { return; }
