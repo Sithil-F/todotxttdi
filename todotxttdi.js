@@ -30,11 +30,10 @@ $(document).ready(function () {
     todotxttdi.reviewtimer = null;
     todotxttdi.filtertimer = null;
     todotxttdi.helpon = false;
-    todotxttdi.isDirty = false;
+    todotxttdi.isDirty = false;//ToDo evaluate if still needed
     todotxttdi.currFilter = "1";
     todotxttdi.prevwindowMode = null;
     todotxttdi.windowMode = null;
-    todotxttdi.client = null;
     todotxttdi.versionTag = null;
     todotxttdi.nondirtykeys = [16, 17, 18, 19, 20, 27, 33, 34, 35, 36, 37, 38, 39, 40, 45, 91, 92, 93, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 144, 145, 233]; //see http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
     todotxttdi.alerthashtag = / #(today|past|tomorrow)\b/g;
@@ -368,7 +367,7 @@ $(document).ready(function () {
             $("#todotxt").hide();
             $("#helptxt").hide();
             $("#helplink").hide();
-            $("#saving_status_msg").text("");
+            $("#saving_status_msg").text("");//ToDo evaluate if #saving_status_msg is still usefull
             $("#saving_status_msg").show();
             $("#logout").hide();
             $("#footer").hide();
@@ -379,14 +378,6 @@ $(document).ready(function () {
             $("#helplink").attr("src", "cute_ball_stop_help.png");
             $("#helplink").attr("title", "Return to Todo.txt");
             $("#helplink").show();
-            $("#saving_status_msg").hide();
-            $("#logout").hide();
-            $("#footer").hide();
-        } else if (mode === "error") {//ToDo delete when no longer called
-            $("#welcome").hide();
-            $("#todotxt").hide();
-            $("#helptxt").hide();
-            $("#helplink").hide();
             $("#saving_status_msg").hide();
             $("#logout").hide();
             $("#footer").hide();
@@ -402,99 +393,6 @@ $(document).ready(function () {
             $("#logout").show();
             $("#footer").show();
         }
-    }
-
-    function dropBoxFailError(error) {
-        var errormsg;
-        if (error.response) {
-            errormsg = error.response.error;
-        } else {
-            errormsg = error.responseText;
-        }
-        todotxttdi.isDirty = false; // we abandon the few keystrokes that are unsaved.
-        switchWindowMode("error");
-    }
-
-    function checkonline(msg) {
-        todotxttdi.client.stat("todo.txt", function (error, stat) {
-            if (error) {
-                dropBoxFailError(error);
-                return;
-            }
-        });
-    }
-
-    function loadit() {
-        todotxttdi.client.readFile("todo.txt", null, function (error, data, stat) {
-            if (error) {
-                if (error.response.error === "File has been deleted" || error.response.error === "File not found") {
-                    todotxttdi.client.writeFile("todo.txt", "", function (error, stat) {
-                        if (error) {
-                            dropBoxFailError(error);
-                            return;
-                        }
-                        switchWindowMode("use");
-                        todotxttdi.isDirty = false;
-                        $("#saving_status_msg").text("Created todo.txt in the /Apps/todotxttdi folder");
-                        todotxttdi.versionTag = stat.versionTag;
-                    });
-                } else {
-                    dropBoxFailError(error);
-                    return;
-                }
-            } else {
-                switchWindowMode("use");
-                if (data) {
-                    $("#t1").val(data);
-                    todotxttdi.isDirty = false;
-                    todotxttdi.versionTag = stat.versionTag;
-                    reviewt1();
-                    filtert1();
-                    $("#saving_status_msg").text("Latest (" + stat.modifiedAt.dropboxDateTolocalDateString() + ") version retrieved from Dropbox.");
-
-                }
-            }
-        });
-
-    }
-
-
-    function authandload() {
-        todotxttdi.client = new Dropbox.Client({
-            key: todotxttdi_key,
-            sandbox: true
-        });
-        todotxttdi.client.authDriver(new Dropbox.Drivers.Redirect({
-            rememberUser: true
-        }));
-
-        todotxttdi.client.authenticate(function (error, client) {
-            if (error) {
-                dropBoxFailError(error);
-                return;
-            }
-            if (!(client.isAuthenticated())) { // an interactive authentication is required.
-                switchWindowMode("welcome");
-                return;
-            }
-            loadit();
-            $("#logout").append('<img src="dropbox_stop32.png" title="Disconnect from Dropbox" id="logoutbutton" />');
-            $("#logoutbutton").click(
-                function (event) {
-                    if (todotxttdi.isDirty) {
-                        if (!confirm("You have unsaved changes in your todo list. Do you wish to disconnect from Dropbox?")) {
-                            return;
-                        }
-                    }
-                    todotxttdi.isDirty = false; // prevent the window from also catching this.
-                    todotxttdi.client.signOff(function () {
-                        switchWindowMode("welcome");
-                        localStorage.setItem("userRequestedAuthentication", "false");
-                    });
-                    event.preventDefault();
-                }
-            );
-        });
     }
 
     window.onbeforeunload = function () {
@@ -523,7 +421,8 @@ $(document).ready(function () {
         event.preventDefault();
     });
     if (localStorage.getItem("userRequestedAuthentication") === "true") {
-        authandload();
+        //authandload();
+    	//ToDo remove
     } else {
         switchWindowMode("welcome"); 
     }
@@ -571,10 +470,6 @@ $(document).ready(function () {
         clearTimeout(todotxttdi.filtertimer);
         todotxttdi.currFilter = "3";
         todotxttdi.filtertimer = setTimeout(filtert1, 500);
-    });
-
-    $(window).focus(function () {
-        if (todotxttdi.windowMode === "use") {checkonline(""); }
     });
 
     $("#helplink").click(function (event) {
