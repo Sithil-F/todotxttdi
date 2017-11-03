@@ -28,7 +28,6 @@ $(document).ready(function () {
     var todotxttdi = {};
     todotxttdi.resizetimer = null;
     todotxttdi.reviewtimer = null;
-    todotxttdi.savertimer = null;
     todotxttdi.filtertimer = null;
     todotxttdi.helpon = false;
     todotxttdi.isDirty = false;
@@ -498,35 +497,6 @@ $(document).ready(function () {
         });
     }
 
-    function saveit() {
-        // save to dropbox 
-        if ($("#t1").val() !== "" && todotxttdi.client.isAuthenticated()) {
-            todotxttdi.client.stat("todo.txt", function (error, stat) {
-                if (error) {
-                    dropBoxFailError(error);
-                    return;
-                }
-                if (stat.versionTag === todotxttdi.versionTag) {
-                    // save after removing the alert hashtags
-                    todotxttdi.client.writeFile("todo.txt", $("#t1").val().replace(todotxttdi.alerthashtag, ""), function (error, stat) {
-                        if (error) {
-                            dropBoxFailError(error);
-                            return;
-                        }
-                        todotxttdi.isDirty = false;
-                        $("#saving_status_msg").text("All changes saved in Dropbox (" + stat.modifiedAt.dropboxDateTolocalDateString() + ")");
-                        todotxttdi.versionTag = stat.versionTag;
-                    });
-                } else {
-                    $("#saving_status_msg").text("Retrieving...");
-                    alert("Your todo.txt has been changed using another browser. Retrieving most recent version ... (" + stat.modifiedAt.dropboxDateTolocalDateString() + ")");
-                    loadit();
-                }
-            });
-        }
-
-    }
-
     window.onbeforeunload = function () {
         if (todotxttdi.isDirty) {
             return "You have unsaved changes in your todo list.";
@@ -564,8 +534,6 @@ $(document).ready(function () {
         $("#saving_status_msg").text("Saving...");
         clearTimeout(todotxttdi.reviewtimer);
         todotxttdi.reviewtimer = setTimeout(reviewt1, 500);
-        clearTimeout(todotxttdi.savertimer);
-        todotxttdi.savertimer = setTimeout(saveit, 5000);
     });
 
     $("#filter1").keydown(function (e) {
