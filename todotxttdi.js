@@ -361,7 +361,7 @@ $(document).ready(function () {
 
     }
 
-    function switchWindowMode(mode, message) {
+    function switchWindowMode(mode) {
         todotxttdi.prevwindowMode = todotxttdi.windowMode;
         todotxttdi.windowMode = mode;
         if (mode === "welcome") {
@@ -372,7 +372,6 @@ $(document).ready(function () {
             $("#saving_status_msg").text("");
             $("#saving_status_msg").show();
             $("#logout").hide();
-            $("#dropboxfail").hide();
             $("#footer").hide();
         } else if (mode === "help") {
             $("#welcome").hide();
@@ -383,17 +382,14 @@ $(document).ready(function () {
             $("#helplink").show();
             $("#saving_status_msg").hide();
             $("#logout").hide();
-            $("#dropboxfail").hide();
             $("#footer").hide();
-        } else if (mode === "error") {
+        } else if (mode === "error") {//ToDo delete when no longer called
             $("#welcome").hide();
             $("#todotxt").hide();
             $("#helptxt").hide();
             $("#helplink").hide();
             $("#saving_status_msg").hide();
             $("#logout").hide();
-            $("#reportedmsg").text(message);
-            $("#dropboxfail").show();
             $("#footer").hide();
         } else if (mode === "use") {
             $("#welcome").hide();
@@ -405,7 +401,6 @@ $(document).ready(function () {
             $("#saving_status_msg").text("");
             $("#saving_status_msg").show();
             $("#logout").show();
-            $("#dropboxfail").hide();
             $("#footer").show();
         }
     }
@@ -418,7 +413,7 @@ $(document).ready(function () {
             errormsg = error.responseText;
         }
         todotxttdi.isDirty = false; // we abandon the few keystrokes that are unsaved.
-        switchWindowMode("error", errormsg);
+        switchWindowMode("error");
     }
 
     function checkonline(msg) {
