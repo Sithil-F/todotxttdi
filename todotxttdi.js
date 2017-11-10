@@ -377,6 +377,8 @@ $(document).ready(function () {
             $("#logout").hide();
             $("#footer").hide();
         } else if (mode === "help") {
+        	$("#loaddialog").hide();
+        	$("#savedialog").hide();
             $("#welcome").hide();
             $("#todotxt").hide();
             $("#helptxt").show();
@@ -390,6 +392,8 @@ $(document).ready(function () {
             $("#logout").hide();
             $("#footer").hide();
         } else if (mode === "use") {
+        	$("#loaddialog").hide();
+        	$("#savedialog").hide();
             $("#welcome").hide();
             $("#todotxt").show();
             $("#helptxt").hide();
@@ -476,7 +480,14 @@ $(document).ready(function () {
     if (localStorage.getItem("currFilter")) {todotxttdi.currFilter = localStorage.getItem("currFilter"); }
 
     //ToDo Switch to 'use' if filters are already saved
-    switchWindowMode("welcome");
+    if( localStorage.getItem("filter1") === true ||
+    	localStorage.getItem("filter2") === true ||
+    	localStorage.getItem("filter3") === true ||
+    	($("#t1").val() != null && $("#t1").val() != "" )){
+    	switchWindowMode("use");
+    }else{
+    	switchWindowMode("welcome");
+    }
 
     $("#startbutton").click(function (event) {
     	//ToDo rename newfile to understood or similar
@@ -487,7 +498,8 @@ $(document).ready(function () {
     $("#t1").keydown(function (e) {
         if ($.inArray(e.which, todotxttdi.nondirtykeys) !== -1) { return; }
         todotxttdi.isDirty = true;
-        $("#saving_status_msg").text("Saving...");
+        //ToDo check if still needed or useful
+        //$("#saving_status_msg").text("Saving...");
         clearTimeout(todotxttdi.reviewtimer);
         todotxttdi.reviewtimer = setTimeout(reviewt1, 500);
     });
