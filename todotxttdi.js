@@ -363,6 +363,8 @@ $(document).ready(function () {
         todotxttdi.prevwindowMode = todotxttdi.windowMode;
         todotxttdi.windowMode = mode;
         if (mode === "welcome") {
+        	$("#loaddialog").hide();
+        	$("#savedialog").hide();
             $("#welcome").show();
             $("#todotxt").hide();
             $("#helptxt").hide();
@@ -403,6 +405,20 @@ $(document).ready(function () {
             $("#footer").show();
         }
     }
+    
+    function loadFileAsText()
+    {
+    	var fileToLoad = document.getElementById("loadfile").files[0];
+
+    	var fileReader = new FileReader();
+    	fileReader.onload = function(fileLoadedEvent) 
+    	{
+    		var textFromFileLoaded = fileLoadedEvent.target.result;
+    		$("#t1").val(textFromFileLoaded);
+    		//document.getElementById("inputTextToSave").value = textFromFileLoaded;
+    	};
+    	fileReader.readAsText(fileToLoad, "UTF-8");
+    }
 
     window.onbeforeunload = function () {
         if (todotxttdi.isDirty) {
@@ -416,6 +432,42 @@ $(document).ready(function () {
         clearTimeout(todotxttdi.resizetimer);
         todotxttdi.resizetimer = setTimeout(resizet1, 250);
     });
+    
+    function saveTextAsFile()
+    {
+    	var textToWrite = document.getElementById("t1").value;
+    	var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+    	var fileNameToSaveAs = document.getElementById("savefile").value;
+    	if (fileNameToSaveAs == null || fileNameToSaveAs == ""){
+    		fileNameToSaveAs = "todo.txt";
+    	}
+
+    	var downloadLink = document.createElement("a");
+    	downloadLink.download = fileNameToSaveAs;
+    	downloadLink.innerHTML = "Download File";
+    	if (window.webkitURL != null)
+    	{
+    		// Chrome allows the link to be clicked
+    		// without actually adding it to the DOM.
+    		downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+    	}
+    	else
+    	{
+    		// Firefox requires the link to be added to the DOM
+    		// before it can be clicked.
+    		downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+    		downloadLink.onclick = destroyClickedElement;
+    		downloadLink.style.display = "none";
+    		document.body.appendChild(downloadLink);
+    	}
+
+    	downloadLink.click();
+    }
+
+    function destroyClickedElement(event)
+    {
+    	document.body.removeChild(event.target);
+    }
 
     // restore filters from local storage
     if (localStorage.getItem("filter1")) {$("#filter1").val(localStorage.getItem("filter1")); }
@@ -423,20 +475,10 @@ $(document).ready(function () {
     if (localStorage.getItem("filter3")) {$("#filter3").val(localStorage.getItem("filter3")); }
     if (localStorage.getItem("currFilter")) {todotxttdi.currFilter = localStorage.getItem("currFilter"); }
 
-    //auth to dropbox
-    $("#connecttodropbox").click(function (event) {
-        localStorage.setItem("userRequestedAuthentication", "true");
-        authandload();
-        event.preventDefault();
-    });
-    if (localStorage.getItem("userRequestedAuthentication") === "true") {
-        //authandload();
-    	//ToDo remove
-    } else {
-        switchWindowMode("welcome"); 
-    }
+    //ToDo Switch to 'use' if filters are already saved
+    switchWindowMode("welcome");
 
-    $("#newfile").click(function (event) {
+    $("#startbutton").click(function (event) {
     	//ToDo rename newfile to understood or similar
     	switchWindowMode("use");
     	event.preventDefault();
@@ -501,6 +543,38 @@ $(document).ready(function () {
     $("#clearicon").click(function (event) {
     	$("#t1").val('');
         event.preventDefault();
+    });
+    
+    $("#loadicon").click(function (event) {
+    	$("#loaddialog").show();
+        event.preventDefault();
+    });
+    
+    $("#loadbutton").click(function (event) {
+    	loadFileAsText();
+    	$("#loaddialog").hide();
+    	event.preventDefault();
+    });
+    
+    $("#cancelloadbutton").click(function (event) {
+    	$("#loaddialog").hide();
+    	event.preventDefault();
+    });
+    
+    $("#saveicon").click(function (event) {
+    	$("#savedialog").show();
+        event.preventDefault();
+    });
+    
+    $("#savebutton").click(function (event) {
+    	saveTextAsFile();
+    	$("#savedialog").hide();
+    	event.preventDefault();
+    });
+    
+    $("#cancelsavebutton").click(function (event) {
+    	$("#savedialog").hide();
+    	event.preventDefault();
     });
 
     $("#sortalphanumeric").click(function (event) {

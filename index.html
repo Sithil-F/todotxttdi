@@ -153,6 +153,29 @@
       </td>
     </tr>
   </table>
+  
+  <!-- ToDo use CSS more properly -->
+  <div id="loaddialog" style=" width: 100%; float:right; border-bottom: thin solid #D0D0FF; font-size: 120%; background-color: #ffffff">
+    <table style="float:right">
+      <tr>
+        <td>Select a File to Load:</td>
+        <td style="padding-left: 10px"><input type="file" id="loadfile"/></td>
+        <td style="padding-left: 10px"><button id="loadbutton">Load Selected File</button></td>
+        <td style="padding: 0px 10px"><button id="cancelloadbutton">Cancel</button></td>
+      </tr>
+    </table>  
+  </div>
+  
+  <div id="savedialog" style=" width: 100%; float:right; border-bottom: thin solid #D0D0FF; font-size: 120%; background-color: #ffffff">
+    <table style="float:right">
+      <tr>
+        <td>Filename to Save As:</td>
+		<td style="padding-left: 10px"><input id="savefile" placeholder="todo.txt"></input></td>
+		<td style="padding-left: 10px"><button id="savebutton">Save Text to File</button></td>
+		<td style="padding: 0px 10px"><button id="cancelsavebutton">Cancel</button></td>
+      </tr>
+    </table>
+  </div>
 
   <div id="todotxt">
     <div id="topmatter">
@@ -188,13 +211,9 @@
     <p style="text-align:center; margin-left:auto; margin-right: auto; width:550px; color:gray;">
     Todo.txt Text Driven Interface (Beta)<br /><br />Your Todo.txt handled on your browsers <small><em>(except IE)</em></small> at home and work. 
     Todo.txt is just a text file, yet you can sort and filter to your heart's content. Sort on your extension tags. Filter on tasks due today or earlier. Enter due dates like <span class="code">due:fri;</span> or <span class="code">due:+7;</span>. Even without a due date, be reminded when when all a task's predecessor tasks are completed. <br /><br />
-    Click the buttons below to ask start a new file or load an existing one. <br />
-    Don't forget so save your file after you are done.<br /><br />
-    <button  id="connecttodropbox">Ask Dropbox to authorise this browser.</button><br />
-    <button  id="newfile">Create new file</button><br /><br />
-    <button  id="browse">Browse...</button>
-    <button  id="loadfile">Load selected File</button><br /><br />
-    <!--this is a placeholder, replace with better layout for browsing and loading-->
+    Click the button below to start a new file, you can also load an existing file using the Loadbutton there. <br />
+    Don't forget so save your file after you are done.<br /><br /><br />
+    <button  id="startbutton">Understood!</button><br /><br />
     <br /><small>More information about <a  target="moreinfo" href="http://todotxt.com">Todo.txt</a><br />
     Visit the original author's blog <a id="drplink" href= "http://davidpratten.com"  target="moreinfo" >davidpratten.com</a></small></p>
     
